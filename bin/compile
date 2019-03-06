@@ -12,10 +12,5 @@ mkdir -p "$BUILD_DIR/.profile.d"
 
 echo "export DEPS_DIR=\$HOME/.cloudfoundry" > "$BUILD_DIR/.profile.d/0000_set-deps-dir.sh"
 
-# Install apt packages and continue
-echo "------- APT-GET INSTALLING -------"
-source $BIN_DIR/apt-install
-echo "------- APT-GET INSTALL ENDED -------"
-
 $BUILDPACK_PATH/bin/supply "$BUILD_DIR" "$CACHE_DIR" "$DEPS_DIR" 0
 $BUILDPACK_PATH/bin/finalize "$BUILD_DIR" "$CACHE_DIR" "$DEPS_DIR" 0

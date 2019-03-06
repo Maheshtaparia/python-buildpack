@@ -121,6 +121,11 @@ func RunPython(s *Supplier) error {
 		return err
 	}
 
+	if err := s.installLibreOffice(); err != nil {
+		s.Log.Error("Error checking libreoffice: %v", err)
+		return err
+	}
+
 	if err := s.HandleMercurial(); err != nil {
 		s.Log.Error("Could not handle pip mercurial dependencies: %v", err)
 		return err
@@ -508,6 +513,25 @@ func (s *Supplier) installFfi() error {
 func (s *Supplier) HandleFfi() error {
 	if err := s.Command.Execute(s.Stager.BuildDir(), ioutil.Discard, ioutil.Discard, "pip-grep", "-s", "requirements.txt", "pymysql", "argon2-cffi", "bcrypt", "cffi", "cryptography", "django[argon2]", "Django[argon2]", "django[bcrypt]", "Django[bcrypt]", "PyNaCl", "pyOpenSSL", "PyOpenSSL", "requests[security]", "misaka"); err == nil {
 		return s.installFfi()
+	}
+	return nil
+}
+
+func (s *Supplier) installLibreOffice() error {
+	libreofficeDir := filepath.Join(s.Stager.DepDir(), "libreoffice")
+
+	// Install libreoffice
+	if os.Getenv("LIBREOFFICE") != libreofficeDir {
+		s.Log.BeginStep("Noticed dependency requiring libreoffice. Bootstrapping libreoffice.")
+		if err := s.Installer.InstallOnlyVersion("libreoffice", libreofficeDir); err != nil {
+			return err
+		}
+		versions := s.Manifest.AllDependencyVersions("libreoffice")
+		os.Setenv("LIBREOFFICE", libreofficeDir)
+		s.Stager.WriteEnvFile("LIBREOFFICE", libreofficeDir)
+		s.Stager.LinkDirectoryInDepDir(filepath.Join(libreofficeDir, "lib"), "lib")
+		s.Stager.LinkDirectoryInDepDir(filepath.Join(libreofficeDir, "lib", "pkgconfig"), "pkgconfig")
+		s.Stager.LinkDirectoryInDepDir(filepath.Join(libreofficeDir, "lib", "libreoffice-"+versions[0], "include"), "include")
 	}
 	return nil
 }
