@@ -531,13 +531,14 @@ func (s *Supplier) installLibreOffice() error {
 			s.Log.BeginStep("libreofficeErr: %v", err)
 			return err
 		}
-		versions := s.Manifest.AllDependencyVersions("libreoffice")
-		s.Log.BeginStep("libreofficeVersions: %v", versions)
-		os.Setenv("LIBREOFFICE", libreofficeDir)
-		s.Stager.WriteEnvFile("LIBREOFFICE", libreofficeDir)
-		s.Stager.LinkDirectoryInDepDir(filepath.Join(libreofficeDir, "lib"), "lib")
-		s.Stager.LinkDirectoryInDepDir(filepath.Join(libreofficeDir, "lib", "pkgconfig"), "pkgconfig")
-		s.Stager.LinkDirectoryInDepDir(filepath.Join(libreofficeDir, "lib", "libreoffice-"+versions[0], "include"), "include")
+		// versions := s.Manifest.AllDependencyVersions("libreoffice")
+		// s.Log.BeginSooteEnvFile("LIBREOFFICE", libreofficeDir)
+		cmd:= exec.Command("dkpg", "-i", "*.deb")
+		cmd.Dir = libreofficeDir + "/LibreOffice_6.2.1.2_Linux_x86-64_deb/DEBS/"
+		cmd.Output()
+		// s.Stager.LinkDirectoryInDepDir(filepath.Join(libreofficeDir, "lib"), "lib")
+		// s.Stager.LinkDirectoryInDepDir(filepath.Join(libreofficeDir, "lib", "pkgconfig"), "pkgconfig")
+		// s.Stager.LinkDirectoryInDepDir(filepath.Join(libreofficeDir, "lib", "libreoffice-"+versions[0], "include"), "include")
 	}
 	return nil
 }
