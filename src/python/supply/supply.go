@@ -490,6 +490,7 @@ func (s *Supplier) HandleRequirementstxt() error {
 
 func (s *Supplier) installFfi() error {
 	ffiDir := filepath.Join(s.Stager.DepDir(), "libffi")
+	s.Log.BeginStep("ffiDir: %v", ffiDir)
 
 	// Only install libffi if we haven't done so already
 	// This could be installed twice because pipenv installs it, but
@@ -498,9 +499,11 @@ func (s *Supplier) installFfi() error {
 	if os.Getenv("LIBFFI") != ffiDir {
 		s.Log.BeginStep("Noticed dependency requiring libffi. Bootstrapping libffi.")
 		if err := s.Installer.InstallOnlyVersion("libffi", ffiDir); err != nil {
+			s.Log.BeginStep("FFierr: %v", err)
 			return err
 		}
 		versions := s.Manifest.AllDependencyVersions("libffi")
+		s.Log.BeginStep("ffiVersions: %v", versions)
 		os.Setenv("LIBFFI", ffiDir)
 		s.Stager.WriteEnvFile("LIBFFI", ffiDir)
 		s.Stager.LinkDirectoryInDepDir(filepath.Join(ffiDir, "lib"), "lib")
@@ -519,14 +522,17 @@ func (s *Supplier) HandleFfi() error {
 
 func (s *Supplier) installLibreOffice() error {
 	libreofficeDir := filepath.Join(s.Stager.DepDir(), "libreoffice")
+	s.Log.BeginStep("libreofficeDir: %v", libreofficeDir)
 
 	// Install libreoffice
 	if os.Getenv("LIBREOFFICE") != libreofficeDir {
 		s.Log.BeginStep("Noticed dependency requiring libreoffice. Bootstrapping libreoffice.")
 		if err := s.Installer.InstallOnlyVersion("libreoffice", libreofficeDir); err != nil {
+			s.Log.BeginStep("libreofficeErr: %v", err)
 			return err
 		}
 		versions := s.Manifest.AllDependencyVersions("libreoffice")
+		s.Log.BeginStep("libreofficeVersions: %v", versions)
 		os.Setenv("LIBREOFFICE", libreofficeDir)
 		s.Stager.WriteEnvFile("LIBREOFFICE", libreofficeDir)
 		s.Stager.LinkDirectoryInDepDir(filepath.Join(libreofficeDir, "lib"), "lib")
