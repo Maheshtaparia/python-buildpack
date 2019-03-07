@@ -242,6 +242,15 @@ dependencies:
   - cflinuxfs3
   source: https://files.pythonhosted.org/packages/c2/f7/c7b501b783e5a74cf1768bc174ee4fb0a8a6ee5af6afa92274ff964703e0/setuptools-40.8.0.zip
   source_sha256: 6e4eec90337e849ade7103723b9a99631c1f0d19990d6e8412dc42f5ae8b304d
+- name: libreoffice
+  version: 6.2.1
+  uri: https://download.documentfoundation.org/libreoffice/stable/6.2.1/deb/x86_64/LibreOffice_6.2.1_Linux_x86-64_deb.tar.gz
+  sha256: 73985e2b7af8c0ac6e6c1a0bc8b30a31527de9a3150dd674ad0848968fb78f62
+  cf_stacks:
+  - cflinuxfs2
+  - cflinuxfs3
+  source: https://download.documentfoundation.org/libreoffice/stable/6.2.1/deb/x86_64/LibreOffice_6.2.1_Linux_x86-64_deb.tar.gz
+  source_sha256: 73985e2b7af8c0ac6e6c1a0bc8b30a31527de9a3150dd674ad0848968fb78f62
 include_files:
 - CHANGELOG
 - CONTRIBUTING.md
